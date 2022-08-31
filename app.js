@@ -1,10 +1,16 @@
-const loadPhone = search => {
+document.getElementById('brandName').addEventListener('keypress', function (e) {
+    if (e.key == 'Enter') {
+        loadPhone();
+    }
+})
+const loadPhone = async (search) => {
+    toggleSpiner(true);
     const searchField = document.getElementById('brandName');
     const searchValue = searchField.value;
     search = searchValue;
-    fetch(`https://openapi.programming-hero.com/api/phones?search=${search}`)
-        .then(res => res.json())
-        .then(data => displayPhones(data.data));
+    const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${search}`);
+    const data = await res.json();
+    displayPhones(data.data);
     searchField.value = '';
 }
 const displayPhones = data => {
@@ -33,4 +39,15 @@ const displayPhones = data => {
         </div>`;
         phoneContainer.appendChild(phoneDiv);
     });
+    toggleSpiner(false);
+}
+
+const toggleSpiner = isLoading => {
+    const spinnerSection = document.getElementById('spinner');
+    if (isLoading == true) {
+        spinnerSection.classList.remove('d-none');
+    }
+    else {
+        spinnerSection.classList.add('d-none');
+    }
 }
